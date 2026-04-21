@@ -29,6 +29,27 @@ paths:
         '400':
           description: Conditions not satisfied
 
+  /members:
+    post:
+      summary: Add new member
+      tags:
+        - Members
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddNewMemberRequest'
+      responses:
+        '201':
+          description: Member added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Member'
+        '400':
+          description: Conditions not satisfied
+
 components:
   schemas:
     Collectivity:
@@ -97,40 +118,16 @@ components:
         - hasAuthorization
         - posts
 
-paths:
-  /member:
-    post:
-      summary: add new member
-      tags:
-        - Member
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AddNewMemberRequest'
-      responses:
-        '201':
-          description: Member added successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Member'
-        '400':
-          description: Conditions not satisfied
-
-components:
-  schemas:
-    Collectivity:
+    Member:
       type: object
       properties:
         name:
           type: string
-          description: member name
+          description: Member name
           example: Rakoto
         foreName:
           type: string
-          description: member foreName
+          description: Member forename
           example: Jean
         dateOfBirth:
           type: string
@@ -139,16 +136,16 @@ components:
         gender:
           type: string
           example: masculin
-        adress:
+        address:
           type: string
           example: Lot II 150 bis G Analakely
         profession:
           type: string
-          example: Teacher
+          example: Producer
         phoneNumber:
-          type: int
-          example: 0321853269
-        emailAdress:
+          type: string
+          example: "0321853269"
+        emailAddress:
           type: string
           example: rakotoJean@mail.com
         joiningDate:
@@ -156,19 +153,17 @@ components:
           format: date
           example: 2023-10-29
         specificPost:
-          type: array
-          items:
-            type: string
-          example: [president, vice_president, treasurer, secretary, confimed member, junior member]
+          type: string
+          example: junior member
       required:
         - name
         - foreName
         - dateOfBirth
         - gender
-        - adress
+        - address
         - profession
         - phoneNumber
-        - emailAdress
+        - emailAddress
         - joiningDate
         - specificPost
 
@@ -177,11 +172,11 @@ components:
       properties:
         name:
           type: string
-          description: member name
+          description: Member name
           example: Rakoto
         foreName:
           type: string
-          description: member foreName
+          description: Member forename
           example: Jean
         dateOfBirth:
           type: string
@@ -190,28 +185,28 @@ components:
         gender:
           type: string
           example: masculin
-        adress:
+        address:
           type: string
           example: Lot II 150 bis G Analakely
         profession:
           type: string
-          example: Teacher
+          example: Producer
         phoneNumber:
-          type: int
-          example: 0321853269
-        emailAdress:
+          type: string
+          example: "0321853269"
+        emailAddress:
           type: string
           example: rakotoJean@mail.com
-        referral:
-          type: member
-
+        sponsorId:
+          type: integer
+          example: 12
       required:
         - name
         - foreName
         - dateOfBirth
         - gender
-        - adress
+        - address
         - profession
         - phoneNumber
-        - emailAdress
-
+        - emailAddress
+        - sponsorId
