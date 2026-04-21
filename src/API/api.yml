@@ -50,6 +50,38 @@ paths:
         '400':
           description: Conditions not satisfied
 
+  /reports/collectivities:
+    get:
+      summary: Get collectivity statistics report for a given period
+      tags:
+        - Reports
+      parameters:
+        - name: startDate
+          in: query
+          required: true
+          description: Start date of the reporting period
+          schema:
+            type: string
+            format: date
+            example: 2026-01-01
+        - name: endDate
+          in: query
+          required: true
+          description: End date of the reporting period
+          schema:
+            type: string
+            format: date
+            example: 2026-12-31
+      responses:
+        '200':
+          description: Collectivity statistics report generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectivityReportListResponse'
+        '400':
+          description: Invalid period parameters
+
 components:
   schemas:
     Collectivity:
@@ -108,7 +140,11 @@ components:
           type: array
           items:
             type: string
-          example: [president, vice_president, treasurer, secretary]
+          example:
+            - president
+            - vice_president
+            - treasurer
+            - secretary
       required:
         - number
         - name
@@ -167,8 +203,31 @@ components:
         - joiningDate
         - specificPost
 
+    SponsorRequest:
+      type: object
+      properties:
+        memberId:
+          type: integer
+          description: Confirmed member acting as sponsor
+          example: 12
+        relationshipType:
+          type: string
+          description: Nature of the relationship with the sponsor
+          example: family
+      required:
+        - memberId
+        - relationshipType
+
     AddNewMemberRequest:
       type: object
+      description: |
+        Request used to register a new member in a collectivity.
+
+        Admission rules:
+        - at least two sponsors are required
+        - each sponsor must be a confirmed member
+        - the number of sponsors from the target collectivity must be greater than or equal to the number of sponsors from other collectivities
+        - each sponsor must include the relationship type with the candidate
       properties:
         name:
           type: string
@@ -197,9 +256,12 @@ components:
         emailAddress:
           type: string
           example: rakotoJean@mail.com
-        sponsorId:
-          type: integer
-          example: 12
+        sponsors:
+          type: array
+          minItems: 2
+          description: List of sponsors for the candidate
+          items:
+            $ref: '#/components/schemas/SponsorRequest'
       required:
         - name
         - foreName
@@ -209,4 +271,66 @@ components:
         - profession
         - phoneNumber
         - emailAddress
-        - sponsorId
+        - sponsors
+
+    CollectivityReport:
+      type: object
+      properties:
+        collectivityNumber:
+          type: string
+          description: Unique collectivity number
+          example: COL-001
+        collectivityName:
+          type: string
+          description: Collectivity name
+          example: Collectif Analamanga
+        periodStart:
+          type: string
+          format: date
+          example: 2026-01-01
+        periodEnd:
+          type: string
+          format: date
+          example: 2026-12-31
+        attendanceRate:
+          type: number
+          format: double
+          description: Global attendance rate of the collectivity over the given period, expressed as a percentage
+          example: 87.5
+        upToDateContributionRate:
+          type: number
+          format: double
+          description: Percentage of members in the collectivity who are up to date with their contributions over the given period
+          example: 76.4
+        newMembersCount:
+          type: integer
+          description: Number of new members registered in the collectivity over the given period
+          example: 14
+      required:
+        - collectivityNumber
+        - collectivityName
+        - periodStart
+        - periodEnd
+        - attendanceRate
+        - upToDateContributionRate
+        - newMembersCount
+
+    CollectivityReportListResponse:
+      type: object
+      properties:
+        startDate:
+          type: string
+          format: date
+          example: 2026-01-01
+        endDate:
+          type: string
+          format: date
+          example: 2026-12-31
+        reports:
+          type: array
+          items:
+            $ref: '#/components/schemas/CollectivityReport'
+      required:
+        - startDate
+        - endDate
+        - reports
