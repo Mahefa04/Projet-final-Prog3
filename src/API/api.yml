@@ -1,0 +1,217 @@
+openapi: 3.0.3
+info:
+  title: Agricultural Federation API
+  version: 1.0.0
+  description: API REST for collectivity management
+
+servers:
+  - url: http://localhost:8000
+
+paths:
+  /collectivities:
+    post:
+      summary: Create a new collectivity
+      tags:
+        - Collectivities
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCollectivityRequest'
+      responses:
+        '201':
+          description: Collectivity created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Collectivity'
+        '400':
+          description: Conditions not satisfied
+
+components:
+  schemas:
+    Collectivity:
+      type: object
+      properties:
+        number:
+          type: string
+          description: Unique collectivity number
+          example: COL-001
+        name:
+          type: string
+          description: Unique collectivity name
+          example: Collectif Analamanga
+        city:
+          type: string
+          example: Antananarivo
+        specialization:
+          type: string
+          example: Riziculture
+        creationDate:
+          type: string
+          format: date
+          example: 2020-08-16
+      required:
+        - number
+        - name
+        - city
+        - specialization
+        - creationDate
+
+    CreateCollectivityRequest:
+      type: object
+      properties:
+        number:
+          type: string
+          description: Unique collectivity number
+          example: COL-001
+        name:
+          type: string
+          description: Unique collectivity name
+          example: Collectif Analamanga
+        city:
+          type: string
+          example: Antananarivo
+        specialization:
+          type: string
+          example: Riziculture
+        membersCount:
+          type: integer
+          minimum: 10
+          example: 12
+        hasAuthorization:
+          type: boolean
+          example: true
+        posts:
+          type: array
+          items:
+            type: string
+          example: [president, vice_president, treasurer, secretary]
+      required:
+        - number
+        - name
+        - city
+        - specialization
+        - membersCount
+        - hasAuthorization
+        - posts
+
+paths:
+  /member:
+    post:
+      summary: add new member
+      tags:
+        - Member
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddNewMemberRequest'
+      responses:
+        '201':
+          description: Member added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Member'
+        '400':
+          description: Conditions not satisfied
+
+components:
+  schemas:
+    Collectivity:
+      type: object
+      properties:
+        name:
+          type: string
+          description: member name
+          example: Rakoto
+        foreName:
+          type: string
+          description: member foreName
+          example: Jean
+        dateOfBirth:
+          type: string
+          format: date
+          example: 1998-06-23
+        gender:
+          type: string
+          example: masculin
+        adress:
+          type: string
+          example: Lot II 150 bis G Analakely
+        profession:
+          type: string
+          example: Teacher
+        phoneNumber:
+          type: int
+          example: 0321853269
+        emailAdress:
+          type: string
+          example: rakotoJean@mail.com
+        joiningDate:
+          type: string
+          format: date
+          example: 2023-10-29
+        specificPost:
+          type: array
+          items:
+            type: string
+          example: [president, vice_president, treasurer, secretary, confimed member, junior member]
+      required:
+        - name
+        - foreName
+        - dateOfBirth
+        - gender
+        - adress
+        - profession
+        - phoneNumber
+        - emailAdress
+        - joiningDate
+        - specificPost
+
+    AddNewMemberRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: member name
+          example: Rakoto
+        foreName:
+          type: string
+          description: member foreName
+          example: Jean
+        dateOfBirth:
+          type: string
+          format: date
+          example: 1998-06-23
+        gender:
+          type: string
+          example: masculin
+        adress:
+          type: string
+          example: Lot II 150 bis G Analakely
+        profession:
+          type: string
+          example: Teacher
+        phoneNumber:
+          type: int
+          example: 0321853269
+        emailAdress:
+          type: string
+          example: rakotoJean@mail.com
+        referral:
+          type: member
+
+      required:
+        - name
+        - foreName
+        - dateOfBirth
+        - gender
+        - adress
+        - profession
+        - phoneNumber
+        - emailAdress
+
